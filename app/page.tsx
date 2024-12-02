@@ -2,13 +2,14 @@
 import {
   useState
 } from 'react'
-import { Button } from '@/components/ui/button'
-import { PieChartIcon } from '@radix-ui/react-icons'
+import {Button} from '@/components/ui/button'
+import {PieChartIcon} from '@radix-ui/react-icons'
 
 export default function Home() {
   const [query, setQuery] = useState('')
   const [result, setResult] = useState('')
   const [loading, setLoading] = useState(false)
+
   async function createIndexAndEmbeddings() {
     try {
       const result = await fetch('/api/setup', {
@@ -20,6 +21,7 @@ export default function Home() {
       console.log('err:', err)
     }
   }
+
   async function sendQuery() {
     if (!query) return
     setResult('')
@@ -37,6 +39,7 @@ export default function Home() {
       setLoading(false)
     }
   }
+
   return (
     <main className="flex flex-1 flex-col justify-center items-center p-24">
       { /* consider removing this button from the UI once the embeddings are created ... */}
@@ -52,15 +55,19 @@ export default function Home() {
         Langchain, Pinecone, and GPT with Next.js
       </p>
       <input
-        className='
-      mt-3
-      rounded border w-[600px]
-      text-black px-2 py-1' onChange={e => setQuery(e.target.value)} />
+        className='mt-3 rounded border w-[600px] text-black px-2 py-1'
+        onChange={e => setQuery(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            sendQuery()
+          }
+        }}
+      />
       <Button
         className='w-[400px] mt-3'
         onClick={sendQuery}>Ask AI</Button>
       {
-        loading && <PieChartIcon className='my-5 w-8 h-8 animate-spin' />
+        loading && <PieChartIcon className='my-5 w-8 h-8 animate-spin'/>
       }
       {
         result && (
